@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Stockfish for Chess.com",
+  "version": "2.0.0",
+  "description": "Local Stockfish for Chess.com",
+  "permissions": ["storage"],
+  "host_permissions": ["*://*.chess.com/*"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["stockfish.js", "engine.html", "engine.js"],
+      "matches": ["*://*.chess.com/*"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*.chess.com/*"],
+      "js": ["chess.js", "default_settings.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

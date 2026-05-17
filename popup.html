@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Stockfish</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; width: 260px; padding: 0; background: #262421; color: #fff; margin: 0; }
+    .header { background: #1e1c1a; padding: 15px; text-align: center; border-bottom: 1px solid #3c3a38; }
+    .header h3 { margin: 0; font-size: 16px; color: #fff; }
+    .content { padding: 15px; }
+    
+    .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .setting-label { font-size: 14px; font-weight: 500; color: #d2d0ce; }
+    
+    .main-toggle { background: #81b64c; color: white; border: none; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 5px; cursor: pointer; width: 100%; transition: 0.2s; margin-bottom: 10px; }
+    .main-toggle:active { transform: scale(0.97); }
+    .main-toggle.off { background: #fa412d; }
+
+    .reload-btn { background: #4b4844; color: white; border: none; padding: 10px; font-size: 13px; font-weight: bold; border-radius: 5px; cursor: pointer; width: 100%; transition: 0.2s; margin-bottom: 20px; }
+    .reload-btn:hover { background: #5c5955; }
+    .reload-btn:active { transform: scale(0.97); }
+
+    .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #4b4844; transition: .3s; border-radius: 22px; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+    input:checked + .slider { background-color: #81b64c; }
+    input:checked + .slider:before { transform: translateX(18px); }
+
+    input[type="color"] { -webkit-appearance: none; border: none; width: 28px; height: 28px; border-radius: 4px; cursor: pointer; padding: 0; background: none; }
+    input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    input[type="color"]::-webkit-color-swatch { border: 2px solid #3c3a38; border-radius: 4px; }
+    
+    input[type="range"] { width: 90px; cursor: pointer; accent-color: #81b64c; }
+
+    .divider { height: 1px; background: #3c3a38; margin: 15px 0; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h3>Stockfish</h3>
+  </div>
+  
+  <div class="content">
+    <button id="mainToggle" class="main-toggle">Enabled</button>
+    <button id="reloadBtn" class="reload-btn">↻ Reload</button>
+
+    <div class="setting-row">
+      <span class="setting-label">Depth: <span id="depthVal"></span></span>
+      <input type="range" id="depthSlider">
+    </div>
+
+    <div class="setting-row">
+      <span class="setting-label">Lines (Max): <span id="linesVal"></span></span>
+      <input type="range" id="linesSlider">
+    </div>
+
+    <div class="setting-row">
+      <span class="setting-label">Show arrow</span>
+      <label class="switch">
+        <input type="checkbox" id="showArrow">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-row">
+      <span class="setting-label">Show opponent moves</span>
+      <label class="switch">
+        <input type="checkbox" id="showOpponentMoves">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-row">
+      <span class="setting-label">Show text</span>
+      <label class="switch">
+        <input type="checkbox" id="showText">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-row">
+      <span class="setting-label">Show eval bar</span>
+      <label class="switch">
+        <input type="checkbox" id="showEvalBar">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-row">
+      <span class="setting-label">Full Autopilot</span>
+      <label class="switch">
+        <input type="checkbox" id="autoPilotToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-row">
+      <span class="setting-label">Bot Speed: <span id="speedVal"></span></span>
+      <input type="range" id="speedSlider">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="setting-row">
+      <span class="setting-label">Opacity: <span id="opacityVal"></span></span>
+      <input type="range" id="opacitySlider">
+    </div>
+    
+    <div class="setting-row" style="flex-direction: column; align-items: flex-start;">
+      <span class="setting-label" style="margin-bottom: 8px;">Arrow Colors (Top 1 to 10)</span>
+      <div style="display: flex; gap: 5px; flex-wrap: wrap; width: 100%;">
+        <input type="color" id="color1" title="Move 1">
+        <input type="color" id="color2" title="Move 2">
+        <input type="color" id="color3" title="Move 3">
+        <input type="color" id="color4" title="Move 4">
+        <input type="color" id="color5" title="Move 5">
+        <input type="color" id="color6" title="Move 6">
+        <input type="color" id="color7" title="Move 7">
+        <input type="color" id="color8" title="Move 8">
+        <input type="color" id="color9" title="Move 9">
+        <input type="color" id="color10" title="Move 10">
+      </div>
+    </div>
+
+    <div class="setting-row" style="margin-top: 15px;">
+      <span class="setting-label">Text color</span>
+      <input type="color" id="textColor">
+    </div>
+  </div>
+
+  <script src="default_settings.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
